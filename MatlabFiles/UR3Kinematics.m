@@ -7,8 +7,8 @@ close all
 
 global link;
 
-% joint_angle_deg = [0 0 0 0 0 0];
-joint_angle_deg = [30 22 -45 10 20 10];
+
+ joint_angle_deg = [30 25 -45 10 5 10];
 joint_angle_rad = joint_angle_deg * pi /180.0
 
 link(1).link_offset = [0;  0.000; 0.000]; link(1).joint_angle = 0; link(1).joint_axis = [0; 0; 1]; link(1).joint_dir =  1; link(1).pos = [0; 0; 0]; link(1).rot = eye(3);
@@ -21,9 +21,9 @@ link(6).link_offset = [0; -0.082; 0.000]; link(6).joint_angle = 0; link(6).joint
 %% UR3 Forward Kinematics
 FK_Result = Forward(joint_angle_rad)
 
-%  DrawRobot
+DrawRobot
 %% UR3 Inverse Kinematics
-IK_result = Inverse2(link(6).rot, link(6).pos, 0)
+IK_result = Inverse(link(6).rot, link(6).pos, 0)
 
 
 %% IK check
