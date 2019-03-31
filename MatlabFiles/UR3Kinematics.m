@@ -21,6 +21,11 @@ link(6).link_offset = [0; -0.082; 0.000]; link(6).joint_angle = 0; link(6).joint
 %% UR3 Forward Kinematics
 FK_Result = Forward(joint_angle_rad)
 
+for i = 1:6
+    disp([num2str(i)]);
+    [link(i).rot link(i).pos ]
+end
+
 DrawRobot
 %% UR3 Inverse Kinematics
 IK_result = Inverse(link(6).rot, link(6).pos, 0)
@@ -31,3 +36,29 @@ for i = 1:8
     FK_Result_for_check = Forward(IK_result(i, 1:6))
 end
 
+%% getJacobian & Nemurical IK
+target_rot = FK_Result(1:3, 1:3);
+target_pos = FK_Result(1:3, 4);
+
+ja = [20 15 -10 5 2 5]' * pi/180.0;
+Curr = Forward(ja');
+curr_rot = Curr(1:3, 1:3);
+curr_pos = Curr(1:3, 4);
+
+I = eye(6,6);
+for n = 1:20
+err = CalcErr(target_rot, target_pos, curr_rot, curr_pos);
+J = CalcJacobian;
+
+ja = ja + inv(J'*J + 0.01*I)*J'*err;
+
+Curr = Forward(ja');
+curr_rot = Curr(1:3, 1:3);
+curr_pos = Curr(1:3, 4);
+end
+joint_angle_rad
+ja'
+target_rot
+target_pos
+curr_rot
+curr_pos
