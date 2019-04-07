@@ -1,4 +1,4 @@
-function [ IK_result ] = Inverse2( rot, pos, q6_des )
+function [ IK_result ] = Inverse( rot, pos, q6_des )
 
 global link;
 
