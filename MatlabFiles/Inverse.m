@@ -53,10 +53,10 @@ IK_result(7:8, 5) = -th5_2;
 
 % get angle 6 & angle 2, 3, 4
 for i = 1:2:8
-
+    
     th1 = IK_result(i, 1);
     th5 = IK_result(i, 5);
-   
+    
     th6 = 0;
     if abs(th5) > eps
         c6 = (-rot(1,1)*sin(th1) + rot(2,1)*cos(th1))/sin(th5);
@@ -72,7 +72,7 @@ for i = 1:2:8
     p4 = pos - [rot(1,2); rot(2,2); rot(3,2)]*(d6) - [R5(1,3); R5(2,3); R5(3,3)]*(a5);
     p4 = Rz(-th1)*p4;
     p4(3) = p4(3) - a2;
-
+    
     if (a3 + a4 - sqrt(p4(1)*p4(1) + p4(3)*p4(3))) < 0
         disp(['error ', num2str(i)])
         continue;
@@ -84,20 +84,20 @@ for i = 1:2:8
     IK_result(i, 3) = th3_1;
     IK_result(i+1, 3) = th3_2;
     
-     th2_1 = 0.5*pi - atan2( p4(3), p4(1) ) + atan2( a4*sin(-th3_1), a3 + a4*cos(-th3_1));
-     th2_2 = 0.5*pi - atan2( p4(3), p4(1) ) + atan2( a4*sin(-th3_2), a3 + a4*cos(-th3_2));
-     
-     IK_result(i, 2) = th2_1;
-     IK_result(i+1, 2) = th2_2;
-     
-     R34 = Ry(-th3_1)*Ry(-th2_1)*Rz(-th1)*rot*Ry(-th6)*Rz(-th5);
-     th4_1 = atan2(R34(1,3), R34(1,1));
-
-     R34 = Ry(-th3_2)*Ry(-th2_2)*Rz(-th1)*rot*Ry(-th6)*Rz(-th5);
-     th4_2 = atan2(R34(1,3), R34(1,1));
-     
-     IK_result(i, 4) = th4_1;
-     IK_result(i+1, 4) = th4_2;
+    th2_1 = 0.5*pi - atan2( p4(3), p4(1) ) + atan2( a4*sin(-th3_1), a3 + a4*cos(-th3_1));
+    th2_2 = 0.5*pi - atan2( p4(3), p4(1) ) + atan2( a4*sin(-th3_2), a3 + a4*cos(-th3_2));
+    
+    IK_result(i, 2) = th2_1;
+    IK_result(i+1, 2) = th2_2;
+    
+    R34 = Ry(-th3_1)*Ry(-th2_1)*Rz(-th1)*rot*Ry(-th6)*Rz(-th5);
+    th4_1 = atan2(R34(1,3), R34(1,1));
+    
+    R34 = Ry(-th3_2)*Ry(-th2_2)*Rz(-th1)*rot*Ry(-th6)*Rz(-th5);
+    th4_2 = atan2(R34(1,3), R34(1,1));
+    
+    IK_result(i, 4) = th4_1;
+    IK_result(i+1, 4) = th4_2;
 end
 
 for i = 1:8

@@ -8,8 +8,9 @@ close all
 global link;
 
 
-joint_angle_deg = [0 -30.1 -41 -9 7.6 10.1];
+joint_angle_deg = [22 -25.1 -51 -19 24 10.1];
 joint_angle_rad = joint_angle_deg * pi /180.0
+% joint_angle_rad = [1.0472 -1.2833+1.5708 -0.7376 -2.6915 -1.5708 3.1416]
 
 link(1).link_offset = [0;  0.000; 0.000]; link(1).joint_angle = 0; link(1).joint_axis = [0; 0; 1]; link(1).joint_dir =  1; link(1).pos = [0; 0; 0]; link(1).rot = eye(3);
 link(2).link_offset = [0; -0.120; 0.152]; link(2).joint_angle = 0; link(2).joint_axis = [0; 1; 0]; link(2).joint_dir = -1; link(2).pos = [0; 0; 0]; link(2).rot = eye(3);
@@ -26,7 +27,7 @@ for i = 1:6
 %     [link(i).rot link(i).pos ]
 end
 
-DrawRobot
+DrawRobot;
 %% UR3 Inverse Kinematics
 IK_result = Inverse(link(6).rot, link(6).pos, 0)
 
@@ -40,25 +41,27 @@ end
 target_rot = FK_Result(1:3, 1:3);
 target_pos = FK_Result(1:3, 4);
 
-ja = [20 15 -10 5 2 5]' * pi/180.0;
+ja = [20 -15 -45 -10 20 5]' * pi/180.0;
 Curr = Forward(ja');
 curr_rot = Curr(1:3, 1:3);
 curr_pos = Curr(1:3, 4);
 
 I = eye(6,6);
-for n = 1:20
-err = CalcErr(target_rot, target_pos, curr_rot, curr_pos);
-J = CalcJacobian;
 
-ja = ja + inv(J'*J + 0.01*I)*J'*err;
-
-Curr = Forward(ja');
-curr_rot = Curr(1:3, 1:3);
-curr_pos = Curr(1:3, 4);
+for n = 1:10
+    err = CalcErr(target_rot, target_pos, curr_rot, curr_pos);
+    J = CalcJacobian; % Calc Jacobian from FK result
+    
+    % Numerical IK (Damped Least Square)
+    ja = ja + inv(J'*J + 0.001*I)*J'*err;
+    
+    Curr = Forward(ja');
+    curr_rot = Curr(1:3, 1:3);
+    curr_pos = Curr(1:3, 4);
 end
+
+
 joint_angle_rad
 ja'
-target_rot
-target_pos
-curr_rot
-curr_pos
+target = [target_rot target_pos]
+curr = [curr_rot curr_pos]
