@@ -53,7 +53,7 @@ IK_result(7:8, 5) = -th5_2;
 
 % get angle 6 & angle 2, 3, 4
 for i = 1:2:8
-% for i = 1:4
+
     th1 = IK_result(i, 1);
     th5 = IK_result(i, 5);
    
@@ -84,8 +84,8 @@ for i = 1:2:8
     IK_result(i, 3) = th3_1;
     IK_result(i+1, 3) = th3_2;
     
-     th2_1 = 0.5*pi - ( atan2( p4(3), p4(1) ) + atan2( a4*sin(th3_1), a3 + a4*sin(th3_1) ) );
-     th2_2 = ( atan2( p4(3), p4(1) ) + atan2( a4*sin(th3_2), a3 + a4*sin(th3_2) ) );
+     th2_1 = 0.5*pi - atan2( p4(3), p4(1) ) + atan2( a4*sin(-th3_1), a3 + a4*cos(-th3_1));
+     th2_2 = 0.5*pi - atan2( p4(3), p4(1) ) + atan2( a4*sin(-th3_2), a3 + a4*cos(-th3_2));
      
      IK_result(i, 2) = th2_1;
      IK_result(i+1, 2) = th2_2;
