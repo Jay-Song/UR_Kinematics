@@ -18,7 +18,12 @@ p5 = rot*[0; -(d6); 0] + pos;
 d = d2+d3+d4;
 R = sqrt(p5(1)*p5(1) + p5(2)*p5(2));
 
-th1_1 = atan2(p5(2), p5(1)) + asin(abs(d)/R);
+th1_1 = 0;
+if d < 0
+    th1_1 = atan2(p5(2), p5(1)) + asin(abs(d)/R);
+else
+    th1_1 = atan2(p5(2), p5(1)) - asin(abs(d)/R);
+end
 
 if (abs(th1_1) < eps)
     th1_1 = 0;
@@ -26,8 +31,14 @@ end
 
 IK_result(1:4, 1) = th1_1;
 
-th1_2 = atan2(p5(2), p5(1)) - asin(abs(d)/R) - pi
-% th1_2 = atan2(p5(2), p5(1)) - asin(abs(d)/R) + pi;
+th1_2 = 0;
+if d < 0
+    th1_2 = atan2(p5(2), p5(1)) - asin(abs(d)/R) - pi
+    % th1_2 = atan2(p5(2), p5(1)) - asin(abs(d)/R) + pi;
+else
+    th1_2 = atan2(p5(2), p5(1)) + asin(abs(d)/R) - pi
+end
+
 if (abs(th1_2) < eps)
     th1_2 = 0;
 end
