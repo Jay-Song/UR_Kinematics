@@ -8,10 +8,10 @@ X = [0 0 0 0 0 0 0 0 0];
 Y = [0 0 0 0 0 0 0 0 0];
 Z = [0 0 0 0 0 0 0 0 0];
 
-a2 = link(2).link_offset(3);
-a3 = link(3).link_offset(3);
-a4 = link(4).link_offset(3);
-a5 = link(5).link_offset(3);
+a2 = link(2).pose_from_prev(3);
+a3 = link(3).pose_from_prev(3);
+a4 = link(4).pose_from_prev(3);
+a5 = link(5).pose_from_prev(3);
 
 
 

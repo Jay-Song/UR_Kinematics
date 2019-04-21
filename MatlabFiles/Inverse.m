@@ -3,22 +3,22 @@ function [ IK_result ] = Inverse( rot, pos, q6_des )
 global link;
 
 IK_result = zeros(8, 6);
-a2 = link(2).link_offset(3);
-a3 = link(3).link_offset(3);
-a4 = link(4).link_offset(3);
-a5 = link(5).link_offset(3);
+a2 = link(2).pose_from_prev(3);
+a3 = link(3).pose_from_prev(3);
+a4 = link(4).pose_from_prev(3);
+a5 = link(5).pose_from_prev(3);
 
-d2 = link(2).link_offset(2);
-d3 = link(3).link_offset(2);
-d5 = link(4).link_offset(2);
-d6 = link(6).link_offset(2);
+d2 = link(2).pose_from_prev(2);
+d3 = link(3).pose_from_prev(2);
+d4 = link(4).pose_from_prev(2);
+d6 = link(6).pose_from_prev(2);
 p5 = rot*[0; -(d6); 0] + pos;
 
 % get angle 1
-d = d2+d3+d5;
+d = d2+d3+d4;
 R = sqrt(p5(1)*p5(1) + p5(2)*p5(2));
 
-th1_1 = atan2(p5(2), p5(1)) - asin(d/R);
+th1_1 = atan2(p5(2), p5(1)) + asin(abs(d)/R);
 
 if (abs(th1_1) < eps)
     th1_1 = 0;
@@ -26,9 +26,16 @@ end
 
 IK_result(1:4, 1) = th1_1;
 
-th1_2 = atan2(p5(2), p5(1)) + asin(d/R) + pi;
+th1_2 = atan2(p5(2), p5(1)) - asin(abs(d)/R) - pi
+% th1_2 = atan2(p5(2), p5(1)) - asin(abs(d)/R) + pi;
 if (abs(th1_2) < eps)
     th1_2 = 0;
+end
+
+if th1_2 > pi 
+    th1_2 = th1_2 - 2*pi;
+elseif th1_2 < -pi 
+    th1_2 = th1_2 + 2*pi;
 end
 
 IK_result(5:8, 1) = th1_2;
