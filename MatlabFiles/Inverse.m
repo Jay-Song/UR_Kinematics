@@ -25,6 +25,12 @@ else
     th1_1 = atan2(p5(2), p5(1)) - asin(abs(d)/R);
 end
 
+if th1_1 > pi 
+    th1_1 = th1_2 - 2*pi;
+elseif th1_1 < -pi 
+    th1_1 = th1_2 + 2*pi;
+end
+
 if (abs(th1_1) < eps)
     th1_1 = 0;
 end
