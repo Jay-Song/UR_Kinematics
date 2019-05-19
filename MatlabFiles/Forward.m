@@ -5,7 +5,7 @@ global link;
 pos = [0 ; 0; 0];
 rot = eye(3);
 
-for i = 1:6
+for i = 1:length(link)
     link(i).joint_angle = joint_angle_rad(i);
     ja = link(i).joint_axis * link(i).joint_dir*link(i).joint_angle;
    
@@ -20,7 +20,7 @@ for i = 1:6
     link(i).rot = rot;
 end
 
-FK_result = [link(6).rot link(6).pos;
+FK_result = [link(length(link)).rot link(length(link)).pos;
                    0 0 0    1       ];
 
 end

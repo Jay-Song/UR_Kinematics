@@ -70,7 +70,7 @@ for n = 1:10
     J = CalcJacobian; % Calc Jacobian from FK result
     
     % Numerical IK (Damped Least Square)
-    ja = ja + inv(J'*J + 0.001*I)*J'*err;
+    ja = ja + J'*inv(J*J' + 0.001*I)*err;
     
     Curr = Forward(ja');
     curr_rot = Curr(1:3, 1:3);
