@@ -56,3 +56,34 @@ end
 ja'
  Curr = Forward(ja')
 
+ %% getJacobian & Weight Matrix and Nemurical IK
+target_rot = FK_Result(1:3, 1:3);
+target_pos = FK_Result(1:3, 4);
+
+ja = [1 1 1 1 1]' * pi/180.0;
+Curr = Forward(ja');
+curr_rot = Curr(1:3, 1:3);
+curr_pos = Curr(1:3, 4);
+
+I = eye(6,6);
+
+for n = 1:20
+    err = CalcErr(target_rot, target_pos, curr_rot, curr_pos);
+    J = CalcJacobian; % Calc Jacobian from FK result
+    
+    % Numerical IK (Damped Least Square)
+    ja = ja + J'*inv(J*J' + 0.001*I)*err;
+    
+    if (ja(3) > 5.0*pi/180.0)
+        ja(3) = 5.0*pi/180.0;
+    elseif (ja(3) < -5.0*pi/180.0)
+        ja(3) = -5.0*pi/180.0;
+    end
+
+    Curr = Forward(ja');
+    curr_rot = Curr(1:3, 1:3);
+    curr_pos = Curr(1:3, 4);
+end
+
+ja'
+ Curr = Forward(ja')
