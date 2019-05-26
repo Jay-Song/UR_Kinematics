@@ -10,7 +10,7 @@ global link;
 
 % joint_angle_deg = [30 -25 -50 -20 25 10];
 % joint_angle_rad = joint_angle_deg * pi /180.0
-joint_angle_rad = [1.0472 -1.2833+1.5708 -0.7376 -2.6915 -1.5708 3.14]
+joint_angle_rad = [1.0472 -1.2833+1.5708 -0.7376 -2.6915 -1.5708 0]
 
 % UR 3
 % link(1).pose_from_prev = [0;  0.000; 0.000]; link(1).joint_angle = 0; link(1).joint_axis = [0; 0; 1]; link(1).joint_dir =  1; link(1).pos = [0; 0; 0]; link(1).rot = eye(3);
@@ -56,21 +56,25 @@ end
 
 %% getJacobian & Nemurical IK
 target_rot = FK_Result(1:3, 1:3);
-target_pos = FK_Result(1:3, 4);
+target_pos = FK_Result(1:3, 4)
 
-ja = [20 -15 -45 -10 20 5]' * pi/180.0;
-Curr = Forward(ja');
+ja = [30 30 30 30 30 30]' * pi/180.0;
+Curr = Forward(ja')
 curr_rot = Curr(1:3, 1:3);
-curr_pos = Curr(1:3, 4);
+curr_pos = Curr(1:3, 4)
 
-I = eye(6,6);
+% target_pos = curr_pos;
+% target_rot = curr_rot;
 
-for n = 1:10
+I = eye(length(link),length(link));
+
+for n = 1:20
     err = CalcErr(target_rot, target_pos, curr_rot, curr_pos);
+    norm([err(1), err(2), err(3)])
     J = CalcJacobian; % Calc Jacobian from FK result
     
     % Numerical IK (Damped Least Square)
-    ja = ja + J'*inv(J*J' + 0.001*I)*err;
+    ja = ja + inv(J'*J + 0.001*I)*J'*err;
     
     Curr = Forward(ja');
     curr_rot = Curr(1:3, 1:3);
